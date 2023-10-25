@@ -1,12 +1,22 @@
-import Image from "next/image";
+import dynamic from "next/dynamic";
+// Use inter from next/font
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
+
+// Dynamically import the `Wallet` component to make sure we don't get SSR errors
+const Wallet = dynamic(
+  () => import("../Components/Wallet").then((res) => res.default),
+  { ssr: false }
+);
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    ></main>
+    <main className={inter.className}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Wallet />
+      </Suspense>
+    </main>
   );
 }
